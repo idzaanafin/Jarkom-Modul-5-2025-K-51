@@ -76,7 +76,7 @@ echo 1 > /proc/sys/net/ipv4/ip_forward
 route add default gw {GATEWAY_IP/NEXT_HOP_IP}
 ```
 
-### Konfigurasi Service
+# Konfigurasi Service
 
 ### DHCP Server
 ```
@@ -90,11 +90,22 @@ nano /etc/dhcp/dhcpd.conf
 subnet 10.89.0.40 netmask 255.255.255.248 {
 }
 
-# khamul & durin
+# khamul
 subnet 10.89.0.32 netmask 255.255.255.248 {
     range 10.89.0.33 10.89.0.38;
     option routers 10.89.0.33;
     option broadcast-address 10.89.0.39;
+    # option domain-name "k51.com";
+    option domain-name-servers 192.168.122.1;
+    default-lease-time 600;
+    max-lease-time 3600;
+}
+
+# durin
+subnet 10.89.0.64 netmask 255.255.255.192 {
+    range 10.89.0.65 10.89.0.126;
+    option routers 10.89.0.65;
+    option broadcast-address 10.89.0.127;
     # option domain-name "k51.com";
     option domain-name-servers 192.168.122.1;
     default-lease-time 600;

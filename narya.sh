@@ -56,3 +56,16 @@ $TTL    604800          ; Waktu cache default (detik)
 
 ln -s /etc/init.d/named /etc/init.d/bind9
 service bind9 restart
+
+# KONFIGURASI FIREWALL IPTABLES
+apt install -y iptables
+#  hanya Vilya yang dapat mengakses Narya (DNS).
+iptables -A INPUT -p udp --dport 53 -s 10.89.0.43 -j ACCEPT
+iptables -A INPUT -p tcp --dport 53 -s 10.89.0.43 -j ACCEPT
+iptables -A INPUT -p udp --dport 53 -j DROP
+iptables -A INPUT -p tcp --dport 53 -j DROP
+
+# HAPUS RULES iptables
+iptables -L INPUT --line-numbers
+iptables -D INPUT 1
+

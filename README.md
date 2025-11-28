@@ -50,6 +50,7 @@ Pembagian subnetting dengan VLSM:
 
 
 # KONFIGURASI IP ADDRESS & STATIC ROUTING
+### Static IP
 ```
 cat << EOF > /etc/network/interfaces
 auto lo
@@ -61,6 +62,17 @@ iface {INTERFACE} inet static
     netmask {NETMASK}
 EOF
 ```
+### Dynamic IP
+```
+cat << EOF > /etc/network/interfaces
+auto lo
+iface lo inet loopback
+auto {INTERFACE}
+iface {INTERFACE} inet dhcp
+EOF
+```
+
+### Static Routing
 ```
 route add -net {NETWORK_ID} netmask {NETMASK} gw {GATEWAY_IP/NEXT_HOP_IP}
 ```

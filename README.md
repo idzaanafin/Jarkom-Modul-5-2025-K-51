@@ -80,7 +80,7 @@ route add -net {NETWORK_ID} netmask {NETMASK} gw {GATEWAY_IP/NEXT_HOP_IP}
 # MENGHUBUNGKAN KE INTERNET
 ### Konfigurasi pada Router utama (Gateway ke Internet)
 ```
-iptables -t nat -A POSTROUTING -s 10.89.0.0/16 -o eth0 -j SNAT --to-source 192.168.122.212
+iptables -t nat -A POSTROUTING -s 10.89.0.0/16 -o eth0 -j SNAT --to-source {IP_INTERFACE_NAT}
 ```
 ### Konfigurasi pada router lain
 ```
@@ -220,4 +220,104 @@ service apache2 start
 echo "<h1>Welcome to {HOSTNAME}</h1>" > /var/www/html/index.html
 service apache2 restart
 ```
+
+# Konfigurasi Firewall (iptables) & Pengujian
+### BLOCK ICMP REQUEST KE VILYA
+`iptables -A INPUT -p icmp --icmp-type echo-request -j DROP`
+
+
+<img width="982" height="143" alt="image" src="https://github.com/user-attachments/assets/da8b0b80-9613-47bd-a922-c83608aabe04" />
+
+<img width="900" height="345" alt="image" src="https://github.com/user-attachments/assets/69afa5f4-06d3-4cef-9970-3ac76f66d05a" />
+
+
+### HANYA ACCEPT VILYA UNTUK ACCESS DNS NARYA
+```
+iptables -A INPUT -p udp --dport 53 -s 10.89.0.43 -j ACCEPT
+iptables -A INPUT -p tcp --dport 53 -s 10.89.0.43 -j ACCEPT
+iptables -A INPUT -p udp --dport 53 -j DROP
+iptables -A INPUT -p tcp --dport 53 -j DROP
+```
+
+<img width="506" height="102" alt="image" src="https://github.com/user-attachments/assets/a98da7d5-4592-430c-a09c-37c6d6e1e4d7" />
+
+<img width="965" height="145" alt="image" src="https://github.com/user-attachments/assets/cc1e9dd5-fce9-4fb1-bbd0-df507b1a5395" />
+
+<img width="842" height="117" alt="image" src="https://github.com/user-attachments/assets/815b01d4-6687-4dc4-ad23-21fd855d6d4a" />
+
+<img width="611" height="104" alt="image" src="https://github.com/user-attachments/assets/eb449eb6-3e47-4bab-b011-09c415bde6dc" />
+
+
+
+### IRONHILLS HANYA DAPAT DIAKSES SABTU MINGGU OLEH DURIN & KHAMUL DAN ELENDIL & ISILDUR
+```
+iptables -A INPUT -s 10.89.0.32/29 -m time --weekdays Sat,Sun -j ACCEPT
+iptables -A INPUT -s 10.89.0.64/26 -m time --weekdays Sat,Sun -j ACCEPT
+iptables -A INPUT -s 10.89.1.0/24 -m time --weekdays Sat,Sun -j ACCEPT
+
+iptables -A INPUT -s 10.89.0.32/29 -j DROP
+iptables -A INPUT -s 10.89.0.64/26 -j DROP
+iptables -A INPUT -s 10.89.1.0/24 -j DROP
+
+iptables -A INPUT -j DROP
+```
+
+
+<img width="1054" height="98" alt="image" src="https://github.com/user-attachments/assets/db0757f5-e7e5-476a-a33f-cac156f64aa6" />
+
+<img width="1056" height="351" alt="image" src="https://github.com/user-attachments/assets/c40849fc-5eeb-44a8-9f27-dc67bfbf35ef" />
+
+<img width="1054" height="143" alt="image" src="https://github.com/user-attachments/assets/b94092f1-f12a-41c4-a02e-98acbc2b765f" />
+
+<img width="1059" height="276" alt="image" src="https://github.com/user-attachments/assets/9227386b-1994-4eb0-b313-e30d0edd6f64" />
+
+
+
+### GILGALAD & CIRDAN HANYA DAPAT AKSES PALANTIR JAM 07.00-15.00 DAN ELENDIL & ISILDUR JAM 17.00-23.00
+```
+iptables -A INPUT -s 10.89.0.128/25 -m time --timestart 07:00 --timestop 15:00 -j ACCEPT
+iptables -A INPUT -s 10.89.1.0/24 -m time --timestart 17:00 --timestop 23:00 -j ACCEPT
+
+iptables -A INPUT -s 10.89.0.128/25 -j DROP
+iptables -A INPUT -s 10.89.1.0/24 -j DROP
+
+iptables -A INPUT -j DROP
+```
+<img width="1060" height="187" alt="image" src="https://github.com/user-attachments/assets/5b0e3f82-ad37-41b8-9ff7-2e8fe4b5e4bc" />
+
+<img width="1059" height="151" alt="image" src="https://github.com/user-attachments/assets/e9d3c56f-72b5-4e6a-a407-470685b43401" />
+
+<img width="1055" height="287" alt="image" src="https://github.com/user-attachments/assets/4faf582e-9427-4cde-b56f-9dccb1625374" />
+
+<img width="1056" height="141" alt="image" src="https://github.com/user-attachments/assets/b245e5a2-2f89-48eb-8020-3b3452df7c6a" />
+
+<img width="1059" height="186" alt="image" src="https://github.com/user-attachments/assets/b22093d8-1b6a-4363-a78b-a4fc35d9c736" />
+
+<img width="1062" height="145" alt="image" src="https://github.com/user-attachments/assets/1470ed63-cf96-48cf-84f8-c423890724f0" />
+
+<img width="1054" height="158" alt="image" src="https://github.com/user-attachments/assets/e4995c49-8918-4d2a-b5c6-923caa685609" />
+
+
+### BLOCK PORT SCANNING 15 PORT DALAM 20 DETIK DAN LOGGING
+```
+
+```
+
+
+
+
+
+### IRONHILLS HANYA BISA DIAKSES DARI 3 KONEKSI AKTIF PER IP
+```
+iptables -A INPUT -p tcp --syn --dport 80 -m connlimit --connlimit-above 3 --connlimit-mask 32 -j REJECT --reject-with tcp-reset
+```
+
+<img width="1054" height="646" alt="image" src="https://github.com/user-attachments/assets/d32b9f62-1752-4638-8867-454506af7cfe" />
+
+<img width="1052" height="94" alt="image" src="https://github.com/user-attachments/assets/a17cbe26-0af3-46a6-819f-9258397febba" />
+
+<img width="1057" height="228" alt="image" src="https://github.com/user-attachments/assets/24d1c851-ced7-4de1-a3bb-69bfe71da381" />
+
+
+### PACKET YANG BERASAL DARI VILYA KE KHAMUL DIARAHKAN KE IRONHILLS
 

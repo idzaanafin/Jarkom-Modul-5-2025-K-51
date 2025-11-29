@@ -34,6 +34,7 @@ iptables -A INPUT -j DROP
 # b. Penyerang yang terblokir tidak dapat melakukan ping, nc, atau curl ke Palantir.
 # c. Catat log iptables dengan prefix "PORT_SCAN_DETECTED".
 
+
 iptables -N PORTSCAN
 
 iptables -A PORTSCAN -m limit --limit 2/min -j LOG --log-prefix "PORT_SCAN_DETECTED: "

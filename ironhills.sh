@@ -33,8 +33,12 @@ iptables -A INPUT -s 10.89.1.0/24 -j DROP
 
 iptables -A INPUT -j DROP
 
-#  hanya boleh berasal dari 3 koneksi aktif per IP dalam waktu bersamaan.
-iptables -N LIMIT_CONN
-iptables -A LIMIT_CONN -m connlimit --connlimit-above 3 -j DROP
-iptables -A INPUT -p tcp --dport 80 -j LIMIT_CONN
+# pengujian hari rabu
+# date -s "next Wednesday 10:00"
 
+
+#  hanya boleh berasal dari 3 koneksi aktif per IP dalam waktu bersamaan.
+iptables -A INPUT -p tcp --syn --dport 80 -m connlimit --connlimit-above 3 --connlimit-mask 32 -j REJECT --reject-with tcp-reset
+
+# testing 
+ab -n 50 -c 5 http://10.89.0.22/

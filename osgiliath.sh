@@ -22,7 +22,15 @@ iface eth3 inet static
 
 EOF
 
-iptables -t nat -A POSTROUTING -s 10.89.0.0/16 -o eth0 -j SNAT --to-source {IP_INTERFACE_NAT}
+# $IP_INTERFACE_NAT=$(ip addr show eth0 | grep "inet " | awk '{print $2}' | cut -d/ -f1)
+while true; do
+    IP_INTERFACE_NAT=$(ip -4 addr show eth0 | grep "inet " | awk '{print $2}' | cut -d/ -f1)
+    if [ -n "$IP_INTERFACE_NAT" ]; then
+        break
+    fi
+    sleep 1
+done
+iptables -t nat -A POSTROUTING -s 10.89.0.0/16 -o eth0 -j SNAT --to-source $IP_INTERFACE_NAT
 # route add -net 10.89.0.0 netmask 255.255.255.252 gw 10.89. #A1
 route add -net 10.89.0.4 netmask 255.255.255.252 gw 10.89.0.2 #A2
 route add -net 10.89.0.8 netmask 255.255.255.252 gw 10.89.0.2 #A3

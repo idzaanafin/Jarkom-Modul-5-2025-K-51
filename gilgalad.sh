@@ -9,3 +9,6 @@ iface eth0 inet dhcp
 EOF
 
 echo "nameserver 192.168.122.1" > /etc/resolv.conf
+
+# biar ga lupa kalo ada konflik ip
+# ip neigh flush all

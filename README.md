@@ -305,8 +305,6 @@ iptables -A INPUT -j DROP
 
 
 
-
-
 ### IRONHILLS HANYA BISA DIAKSES DARI 3 KONEKSI AKTIF PER IP
 ```
 iptables -A INPUT -p tcp --syn --dport 80 -m connlimit --connlimit-above 3 --connlimit-mask 32 -j REJECT --reject-with tcp-reset
@@ -320,7 +318,37 @@ iptables -A INPUT -p tcp --syn --dport 80 -m connlimit --connlimit-above 3 --con
 
 
 ### PACKET YANG BERASAL DARI VILYA KE KHAMUL DIARAHKAN KE IRONHILLS
+```
+iptables -t nat -A PREROUTING -s 10.89.0.43 -d 10.89.0.32/29 \
+  -j DNAT --to-destination 10.89.0.22
+iptables -t nat -A POSTROUTING -d 10.89.0.22 -j MASQUERADE
+```
 
+<img width="1058" height="152" alt="image" src="https://github.com/user-attachments/assets/e390e7b8-5be4-47ae-9628-3e9b7c705d1b" />
+
+<img width="1059" height="137" alt="image" src="https://github.com/user-attachments/assets/985f9c1b-3002-4ccc-bf57-f7907e6a64b2" />
+
+<img width="1060" height="156" alt="image" src="https://github.com/user-attachments/assets/f7cc9174-3428-4b16-9f19-e682d825efe5" />
+
+<img width="1060" height="198" alt="image" src="https://github.com/user-attachments/assets/708077a0-e337-4e10-ae41-fc6dc6ddb395" />
 
 
 ### BLOCK INBOUND & OUTBOUND TRAFFIC KHAMUL
+```
+iptables -A FORWARD -s 10.89.0.32/29 -j DROP
+iptables -A FORWARD -d 10.89.0.32/29 -j DROP
+```
+
+<img width="1053" height="169" alt="image" src="https://github.com/user-attachments/assets/b1004b64-c7d8-4a05-9e9a-e85d9f060c79" />
+
+<img width="1057" height="170" alt="image" src="https://github.com/user-attachments/assets/3f13722a-cbd2-433f-89ec-a873b199bfaf" />
+
+<img width="1060" height="140" alt="image" src="https://github.com/user-attachments/assets/65ca5bd0-d4f3-4533-8184-353e9c38f2ae" />
+
+<img width="1060" height="166" alt="image" src="https://github.com/user-attachments/assets/5847d6c3-9121-4e12-bfa5-be7a87e207a6" />
+
+<img width="1055" height="202" alt="image" src="https://github.com/user-attachments/assets/288590f3-a4b6-4f39-894e-0c260662a1f5" />
+
+
+
+

@@ -54,7 +54,9 @@ service isc-dhcp-relay restart
 
 # KONFIGURASI FIREWALL IPTABLES
 iptables -t nat -A PREROUTING -s 10.89.0.43 -d 10.89.0.32/29 \
-  -j DNAT --to-destination 10.89.0.100
+  -j DNAT --to-destination 10.89.0.22
+iptables -t nat -A POSTROUTING -d 10.89.0.22 -j MASQUERADE
+
 
 
 # isolasi khamul

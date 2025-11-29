@@ -50,3 +50,14 @@ echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
 
 sysctl -p
 service isc-dhcp-relay restart
+
+
+# KONFIGURASI FIREWALL IPTABLES
+iptables -t nat -A PREROUTING -s 10.89.0.43 -d 10.89.0.32/29 \
+  -j DNAT --to-destination 10.89.0.100
+
+
+# isolasi khamul
+iptables -A FORWARD -s 10.89.0.32/29 -j DROP
+iptables -A FORWARD -d 10.89.0.32/29 -j DROP
+

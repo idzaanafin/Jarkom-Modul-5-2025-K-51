@@ -321,3 +321,6 @@ iptables -A INPUT -p tcp --syn --dport 80 -m connlimit --connlimit-above 3 --con
 
 ### PACKET YANG BERASAL DARI VILYA KE KHAMUL DIARAHKAN KE IRONHILLS
 
+
+
+### BLOCK INBOUND & OUTBOUND TRAFFIC KHAMUL
